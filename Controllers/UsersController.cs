@@ -1,3 +1,4 @@
+
 using ApiDevBP.Models;
 using ApiDevBP.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +43,7 @@ namespace ApiDevBP.Controllers
             try
             {
 
-            IEnumerable<UserModel>? users = _userServices.GetUsers();
+            var users = _userServices.GetUsers();
 
             if (users == null) return NotFound();
 

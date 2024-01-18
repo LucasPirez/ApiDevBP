@@ -18,11 +18,5 @@ namespace ApiDevBP.Configurations
         return Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), _connectionString.LocalDbPath);
     }
 
-    public SQLiteConnection SQLiteConnection()
-        {
-            return new SQLiteConnection(GetLocalDbPath());
-        }
-
-       
     }
 }

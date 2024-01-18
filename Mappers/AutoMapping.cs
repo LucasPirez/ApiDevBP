@@ -11,7 +11,6 @@ namespace ApiDevBP.Mappers
         {
             CreateMap<UserEntity, UserModel>();
             CreateMap<UserModel, UserEntity>();
-            CreateMap<IEnumerable<UserEntity>, List<UserModel>>();
         }
     }
 }

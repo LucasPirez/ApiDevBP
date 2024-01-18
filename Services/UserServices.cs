@@ -6,15 +6,15 @@ using SQLite;
 
 namespace ApiDevBP.Services
 {
-    public class UserServices:IUserServices
+    public class UserServices: IUserServices
     {
         private readonly SQLiteConnection _db;
 
         public IMapper _mapper;
 
-        public UserServices(ILocalDatabase db,IMapper autoMapper)
+        public UserServices(SQLiteConnection db,IMapper autoMapper)
         {
-            _db = db.SQLiteConnection();
+            _db = db;
             _db.CreateTable<UserEntity>();
             _mapper = autoMapper;
         }
@@ -26,13 +26,13 @@ namespace ApiDevBP.Services
             return result > 0;
         }
 
-        public  IEnumerable<UserModel>? GetUsers()
+        public IEnumerable<UserModel>? GetUsers()
         {
-            var users =  _db.Query<UserEntity>($"Select * from Users");
+            IEnumerable<UserEntity> users =  _db.Query<UserEntity>($"Select * from Users");
 
             if (users == null) return null;
 
-            return _mapper.Map<IEnumerable<UserModel>>(users);
+            return users.Select(user => _mapper.Map<UserModel>(user));
         }
 
         public bool EditUser(UserModel user,int id)
