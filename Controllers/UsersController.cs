@@ -1,9 +1,7 @@
-using ApiDevBP.Entities;
 using ApiDevBP.Models;
 using ApiDevBP.Services;
 using Microsoft.AspNetCore.Mvc;
-using SQLite;
-using System.Reflection;
+
 
 namespace ApiDevBP.Controllers
 {
@@ -11,7 +9,7 @@ namespace ApiDevBP.Controllers
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly  SQLiteConnection _db;
+
         
         private readonly IUserServices _userServices;
         private readonly ILogger<UsersController> _logger;

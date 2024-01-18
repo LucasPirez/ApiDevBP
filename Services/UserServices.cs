@@ -1,6 +1,7 @@
 ﻿using ApiDevBP.Configurations;
 using ApiDevBP.Entities;
 using ApiDevBP.Models;
+using AutoMapper;
 using SQLite;
 
 namespace ApiDevBP.Services
@@ -9,19 +10,18 @@ namespace ApiDevBP.Services
     {
         private readonly SQLiteConnection _db;
 
-        public UserServices(ILocalDatabase db)
+        public IMapper _mapper;
+
+        public UserServices(ILocalDatabase db,IMapper autoMapper)
         {
             _db = db.SQLiteConnection();
             _db.CreateTable<UserEntity>();
+            _mapper = autoMapper;
         }
 
         public  bool SaveUser(UserModel user)
         {
-            var result =  _db.Insert(new UserEntity()
-            {
-                Name = user.Name,
-                Lastname = user.Lastname
-            });
+            var result =  _db.Insert(_mapper.Map<UserEntity>(user));
 
             return result > 0;
         }
@@ -29,28 +29,10 @@ namespace ApiDevBP.Services
         public  IEnumerable<UserModel>? GetUsers()
         {
             var users =  _db.Query<UserEntity>($"Select * from Users");
+
             if (users == null) return null;
-             return users.Select(x => new UserModel()
-                {
-                    Name = x.Name,
-                    Lastname = x.Lastname
-                  
-                });
-            
 
-        }
-
-        public bool DeleteUser( int id)
-        {
-         
-            var edit = _db.Execute($"DELETE from Users  WHERE Id = {id}"
-           );
-
-
-
-
-
-            return edit > 0;
+            return _mapper.Map<IEnumerable<UserModel>>(users);
         }
 
         public bool EditUser(UserModel user,int id)
@@ -61,13 +43,19 @@ namespace ApiDevBP.Services
 
             userToEdit.Name = user.Name;
             userToEdit.Lastname = user.Lastname;
-          
 
             var edit = _db.Update(userToEdit);
 
+            return edit > 0;
+        }
+
+        public bool DeleteUser(int id)
+        {
+            var edit = _db.Execute($"DELETE from Users  WHERE Id = {id}");
 
             return edit > 0;
         }
+
 
         public UserModel? GetUser(int id)
         {
@@ -75,7 +63,7 @@ namespace ApiDevBP.Services
 
             if (user == null) return null;
 
-            return new UserModel { Lastname = user.Lastname, Name = user.Name };
+            return _mapper.Map<UserModel>(user);
         }
     }
 }
