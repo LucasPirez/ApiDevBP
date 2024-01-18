@@ -15,12 +15,23 @@ namespace ApiDevBP.Controllers
         private readonly IUserServices _userServices;
         private readonly ILogger<UsersController> _logger;
 
+        /// <summary>
+        /// Constructor del controlador.
+        /// </summary>
+        /// <param name="userServices">Servicio de usuarios.</param>
+        /// <param name="logger">Logger para la clase UsersController.</param>
         public UsersController(ILogger<UsersController> logger, IUserServices userServices)
         {
             _logger = logger;
             _userServices = userServices;
         }
 
+        /// <summary>
+        ///  Guardar nuevo usuario.
+        /// </summary>
+
+        /// <response code="200">El usuario se guarda correctamente</response>
+        /// <response code="500">Error interno del servidor.</response>
         [HttpPost]
         public async Task<IActionResult> SaveUser(UserModel user)
         {
@@ -36,7 +47,12 @@ namespace ApiDevBP.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
-
+        /// <summary>
+        /// Obtiene lista de todos los usuarios.
+        /// </summary>
+        /// <returns>Detalles de los usuarios. </returns>
+        /// <response code="200">Los usuarios se obtuvieron correctamente</response>
+        /// <response code="500">Error interno del servidor.</response>
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
@@ -57,7 +73,13 @@ namespace ApiDevBP.Controllers
             }
 
         }
-
+        /// <summary>
+        /// Obtiene un usuario por ID.
+        /// </summary>
+        /// <param name="id">ID del usuario.</param>
+        /// <response code="200">El usuario se obtuvo correctamente</response>
+        /// <response code="404">No se encuentra el usuario con el ID especificado.</response>
+        /// <response code="500">Error interno del servidor.</response>
         [HttpGet("GetOne")]
         public async Task<IActionResult> GetOne(int id)
         {
@@ -78,6 +100,13 @@ namespace ApiDevBP.Controllers
             }
         }
 
+        /// <summary>
+        /// Edita un usuario por ID.
+        /// </summary>
+        /// <param name="id">ID del usuario.</param>
+        /// <response code="200">El usuario se edito correctamente</response>
+        /// <response code="404">No se encuentra el usuario con el ID especificado.</response>
+        /// <response code="500">Error interno del servidor.</response>
         [HttpPut]
         public async Task<IActionResult> EditUser(int id, UserModel user)
         {
@@ -99,15 +128,22 @@ namespace ApiDevBP.Controllers
 
         }
 
+        /// <summary>
+        /// Borra un usuario por ID.
+        /// </summary>
+        /// <param name="id">ID del usuario.</param>
+        /// <response code="200">El usuario se elimino correctamente</response>
+        /// <response code="404">No se encuentra el usuario con el ID especificado.</response>
+        /// <response code="500">Error interno del servidor.</response>
         [HttpDelete]
         public async Task<IActionResult> DeleteUser(int id)
         {
             try
             {
 
-            var userEdited = _userServices.DeleteUser(id);
+            var userEdited =  _userServices.DeleteUser(id);
 
-            if (!userEdited) return NotFound();
+            if (!userEdited) return  NotFound();
 
 
             return Ok(userEdited);

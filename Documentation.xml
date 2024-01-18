@@ -4,5 +4,54 @@
         <name>ApiDevBP</name>
     </assembly>
     <members>
+        <member name="M:ApiDevBP.Controllers.UsersController.#ctor(Microsoft.Extensions.Logging.ILogger{ApiDevBP.Controllers.UsersController},ApiDevBP.Services.IUserServices)">
+            <summary>
+            Constructor del controlador.
+            </summary>
+            <param name="userServices">Servicio de usuarios.</param>
+            <param name="logger">Logger para la clase UsersController.</param>
+        </member>
+        <member name="M:ApiDevBP.Controllers.UsersController.SaveUser(ApiDevBP.Models.UserModel)">
+            <summary>
+             Guardar nuevo usuario.
+            </summary>
+            <response code="200">El usuario se guarda correctamente</response>
+            <response code="500">Error interno del servidor.</response>
+        </member>
+        <member name="M:ApiDevBP.Controllers.UsersController.GetUsers">
+            <summary>
+            Obtiene lista de todos los usuarios.
+            </summary>
+            <returns>Detalles de los usuarios. </returns>
+            <response code="200">Los usuarios se obtenienen correctamente</response>
+            <response code="500">Error interno del servidor.</response>
+        </member>
+        <member name="M:ApiDevBP.Controllers.UsersController.GetOne(System.Int32)">
+            <summary>
+            Obtiene un usuario por ID.
+            </summary>
+            <param name="id">ID del usuario.</param>
+            <response code="200">El usuario se obtuvo correctamente</response>
+            <response code="404">No se encuentra el usuario con el ID especificado.</response>
+            <response code="500">Error interno del servidor.</response>
+        </member>
+        <member name="M:ApiDevBP.Controllers.UsersController.EditUser(System.Int32,ApiDevBP.Models.UserModel)">
+            <summary>
+            Edita un usuario por ID.
+            </summary>
+            <param name="id">ID del usuario.</param>
+            <response code="200">El usuario se edito correctamente</response>
+            <response code="404">No se encuentra el usuario con el ID especificado.</response>
+            <response code="500">Error interno del servidor.</response>
+        </member>
+        <member name="M:ApiDevBP.Controllers.UsersController.DeleteUser(System.Int32)">
+            <summary>
+            Borra un usuario por ID.
+            </summary>
+            <param name="id">ID del usuario.</param>
+            <response code="200">El usuario se elimino correctamente</response>
+            <response code="404">No se encuentra el usuario con el ID especificado.</response>
+            <response code="500">Error interno del servidor.</response>
+        </member>
     </members>
 </doc>
