@@ -1,5 +1,6 @@
 using ApiDevBP.Entities;
 using ApiDevBP.Models;
+using ApiDevBP.Services;
 using Microsoft.AspNetCore.Mvc;
 using SQLite;
 using System.Reflection;
@@ -12,40 +13,68 @@ namespace ApiDevBP.Controllers
     {
         private readonly  SQLiteConnection _db;
         
+        private readonly IUserServices _userServices;
         private readonly ILogger<UsersController> _logger;
 
-        public UsersController(ILogger<UsersController> logger)
+        public UsersController(ILogger<UsersController> logger, IUserServices userServices)
         {
             _logger = logger;
-            string localDb = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "localDb");
-            _db = new SQLiteConnection(localDb);
-            _db.CreateTable<UserEntity>();
+            _userServices = userServices;
         }
 
         [HttpPost]
         public async Task<IActionResult> SaveUser(UserModel user)
         {
-            var result = _db.Insert(new UserEntity()
-            {
-                Name = user.Name,
-                Lastname = user.Lastname
-            });
-            return Ok(result > 0);
+            bool result = _userServices.SaveUser(user);
+            return Ok(result);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
-            var users = _db.Query<UserEntity>($"Select * from Users");
-            if (users != null)
-            {
-                return Ok(users.Select(x=> new UserModel()
-                {
-                    Name = x.Name,
-                    Lastname = x.Lastname
-                }));
-            }
-            return NotFound();
+            IEnumerable<UserModel>? users = _userServices.GetUsers();
+
+            if (users == null) return NotFound();
+
+
+            return Ok(users);
+
+        }
+
+        [HttpGet("GetOne")]
+        public async Task<IActionResult> GetOne(int id)
+        {
+            var user = _userServices.GetUser(id);
+
+            if (user == null) return NotFound();
+
+
+            return Ok(user);
+
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> EditUser(int id, UserModel user)
+        {
+            var userEdited = _userServices.EditUser(user, id);
+
+            if (!userEdited) return NotFound();
+
+
+            return Ok(userEdited);
+
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var userEdited = _userServices.DeleteUser(id);
+
+            if (!userEdited) return NotFound();
+
+
+            return Ok(userEdited);
+
         }
 
     }

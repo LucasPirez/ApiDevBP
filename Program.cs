@@ -1,3 +1,5 @@
+using ApiDevBP.Configurations;
+using ApiDevBP.Services;
 using Microsoft.OpenApi.Models;
 using Serilog;
 var builder = WebApplication.CreateBuilder(args);
@@ -22,7 +24,14 @@ builder.Services.AddSwaggerGen(options =>
     var xmlFilename = $"./Documentation.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
+builder.Services.AddSingleton<ILocalDatabase, LocalDatabase>();
+//builder.Services.AddSingleton(provider => new SQLiteConnection(provider.GetRequiredService<ILocalDatabase>().GetLocalDbPath()));
 
+builder.Services.Configure<ConnectionStrings>(
+    builder.Configuration.GetSection(
+        key: nameof(ConnectionStrings)));
+
+builder.Services.AddScoped<IUserServices, UserServices>();
 
 var app = builder.Build();
 
